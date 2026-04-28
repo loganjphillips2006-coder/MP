@@ -3,6 +3,7 @@ import { loadData, saveData } from './utils/storage'
 import { getToday } from './utils/streaks'
 import TodayScreen from './screens/TodayScreen'
 import ManageHabitsScreen from './screens/ManageHabitsScreen'
+import StatsScreen from './screens/StatsScreen'
 
 export default function App() {
   const [screen, setScreen] = useState('today')
@@ -41,19 +42,34 @@ export default function App() {
     })
   }
 
-  return screen === 'today' ? (
+  if (screen === 'manage') {
+    return (
+      <ManageHabitsScreen
+        habits={data.habits}
+        onAdd={addHabit}
+        onDelete={deleteHabit}
+        onNavigate={() => setScreen('today')}
+      />
+    )
+  }
+
+  if (screen === 'stats') {
+    return (
+      <StatsScreen
+        habits={data.habits}
+        completions={data.completions}
+        onNavigate={() => setScreen('today')}
+      />
+    )
+  }
+
+  return (
     <TodayScreen
       habits={data.habits}
       completions={data.completions}
       onToggle={toggleCompletion}
       onNavigate={() => setScreen('manage')}
-    />
-  ) : (
-    <ManageHabitsScreen
-      habits={data.habits}
-      onAdd={addHabit}
-      onDelete={deleteHabit}
-      onNavigate={() => setScreen('today')}
+      onStats={() => setScreen('stats')}
     />
   )
 }
